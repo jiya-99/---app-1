@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>中科大餓勢力</title>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+
+  <style>
+    /* =====================================================
+       1. 主題色彩變數
+       預設是深色；系統為淺色時自動切換，
+       ===================================================== */
+    :root {
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+
+      --bg: #14123a;        /* 頁面底色 */
+      --card: #201d55;      /* 卡片、面板底色 */
+      --ink: #f6f2ff;       /* 主要文字 */
+      --mute: #b3afdf;      /* 次要文字 */
+      --line: #4a45a0;      /* 邊框 */
+      --accent: #ff5a2a;    /* 強調色（橘紅） */
+      --on-accent: #14123a; /* 強調色上的文字 */
+      --seg: #171547;       /* 切換按鈕底色 */
+      --tape: #ffd23f;      /* 警示帶黃色 */
+      --tape-ink: #14123a;
+      --shadow: rgba(0, 0, 0, .5);
+    }
+
+    /* 系統是淺色模式，而且使用者沒有手動選深色 */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --bg: #f1eeff;
+        --card: #fff;
+        --ink: #1a1650;
+        --mute: #5b5890;
+        --line: #1a1650;
+        --accent: #e8431a;
+        --on-accent: #fff;
+        --seg: #e3deff;
+        --shadow: rgba(26, 22, 80, .35);
+      }
+    }
+
+    /* 使用者手動選了淺色 */
+    :root[data-theme="light"] {
+      --bg: #f1eeff;
+      --card: #fff;
+      --ink: #1a1650;
+      --mute: #5b5890;
+      --line: #1a1650;
+      --accent: #e8431a;
+      --on-accent: #fff;
+      --seg: #e3deff;
+      --shadow: rgba(26, 22, 80, .35);
+    }
+
+    /* =====================================================
+       2. 基本版面
+       ===================================================== */
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 20px 56px;
+    }
+
+    /* =====================================================
+       3. 頁首：Logo、標題、警示帶（置中對齊）
+       ===================================================== */
+    .top {
+      display: flex;
+      flex-direction: column; /* logo 在上、標題在下 */
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+      position: relative;
+    }
+
+    .logo {
+      width: clamp(64px, 16vw, 96px);
+      height: auto;
+      flex: none;
+      transform: rotate(-6deg);
+      filter: drop-shadow(4px 4px 0 var(--shadow));
+    }
+
+    h1 {
+      font-weight: 900;
+      font-size: clamp(2.3rem, 9.5vw, 4.8rem);
+      line-height: 1.05;
+      margin: 0;
+      transform: skew(-7deg);
+      text-shadow: 4px 4px 0 var(--accent);
+      letter-spacing: .02em;
+    }
+
+    /* 深淺色切換按鈕：固定在右上角 */
+    .theme {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border: 2px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.05rem;
+      flex: none;
+    }
+
+    /* 黃黑警示帶 */
+    .tape {
+      text-align: center;
+      margin: 18px -20px 0;
+      padding: 6px 20px;
+      background: repeating-linear-gradient(-45deg,
+          var(--tape) 0 16px,
+          #14123a 16px 32px);
+      transform: rotate(-1.2deg);
+    }
+
+    .tape b {
+      display: inline-block;
+      background: var(--tape);
+      color: var(--tape-ink);
+      font-weight: 900;
+      font-size: clamp(1.05rem, 3.6vw, 1.4rem);
+      padding: 1px 14px;
+      letter-spacing: .08em;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: clamp(1.3rem, 4.6vw, 1.9rem);
+      font-weight: 900;
+      margin: 26px 0 4px;
+      line-height: 1.3;
+    }
+
+    .sub {
+      text-align: center;
+      margin: 0 0 14px;
+      color: var(--mute);
+      font-weight: 500;
+    }
+
+    /* 稱號牌（餓勢力稱號顯示在這裡） */
+    .badge {
+      text-align: center;
+      margin: 0 0 18px;
+    }
+
+    .badge span {
+      display: inline-block;
+      background: var(--tape);
+      color: var(--tape-ink);
+      font-weight: 900;
+      font-size: .9rem;
+      padding: 2px 14px;
+      border-radius: 6px;
+      transform: skew(-7deg);
+    }
+
+    /* =====================================================
+       4. 篩選面板（時段／距離／預算／飲食／口味／隱藏款）
+       ===================================================== */
+    .panel {
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: grid;
+      gap: 12px;
+      margin-bottom: 26px;
+      box-shadow: 6px 6px 0 var(--shadow);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 14px;
+    }
+
+    .row>span {
+      font-weight: 900;
+      font-size: .92rem;
+      min-width: 4.5em;
+    }
+
+    /* 切換按鈕群組（segmented control） */
+    .seg {
+      display: flex;
+      flex-wrap: wrap;
+      background: var(--seg);
+      border-radius: 999px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .seg button {
+      font: inherit;
+      font-size: .92rem;
+      border: 0;
+      background: none;
+      color: var(--ink);
+      padding: 5px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .seg button[aria-pressed="true"] {
+      background: var(--accent);
+      color: var(--on-accent);
+      font-weight: 900;
+    }
+
+    /* 預算旁邊顯示實際金額的小字 */
+    .amt {
+      font-size: .85rem;
+      color: var(--mute);
+    }
+
+    /* 已排除的店家清單 */
+    .blk {
+      font-size: .85rem;
+      color: var(--mute);
+    }
+
+    .blk button {
+      font: inherit;
+      font-size: .85rem;
+      background: none;
+      border: 0;
+      color: var(--accent);
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--tape);
+      outline-offset: 2px;
+    }
+
+    /* =====================================================
+       5. 盲盒區：早午晚餐固定三欄排成一列
+       消夜模式只有一個盒子（.one）
+       ===================================================== */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .grid.one {
+      grid-template-columns: minmax(0, 360px);
+      justify-content: center;
+    }
+
+    /* 盒子上方的時段標籤 */
+    .slot h3 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      margin: 0 0 8px 2px;
+      display: inline-block;
+      background: var(--c);
+      color: #14123a;
+      padding: 0 12px;
+      transform: skew(-7deg);
+    }
+
+    .stage {
+      min-height: 300px;
+    }
+
+    /* 還沒打開的盲盒 */
+    .box {
+      width: 100%;
+      height: 300px;
+      border: 2px solid var(--line);
+      border-radius: 20px;
+      background:
+        repeating-linear-gradient(-45deg, rgba(255, 255, 255, .14) 0 14px, transparent 14px 28px),
+        var(--c);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font: inherit;
+      box-shadow: 6px 6px 0 var(--shadow);
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .box:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 9px 9px 0 var(--shadow);
+    }
+
+    .box:active {
+      transform: translate(3px, 3px);
+      box-shadow: 2px 2px 0 var(--shadow);
+    }
+
+    .box .q {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: #14123a;
+      color: var(--c);
+      font-size: 3.4rem;
+      font-weight: 900;
+      display: grid;
+      place-items: center;
+      line-height: 1;
+      border: 4px solid #fff;
+    }
+
+    .box .hint {
+      font-weight: 900;
+      background: #14123a;
+      color: #fff;
+      padding: 3px 16px;
+      border-radius: 999px;
+      font-size: .92rem;
+      transform: skew(-7deg);
+    }
+
+    /* 開箱前的搖晃動畫 */
+    .box.shake {
+      animation: shake .55s;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: rotate(0);
+      }
+
+      20% {
+        transform: rotate(-6deg) translateY(-6px);
+      }
+
+      40% {
+        transform: rotate(6deg);
+      }
+
+      60% {
+        transform: rotate(-4deg) translateY(-3px);
+      }
+
+      80% {
+        transform: rotate(3deg);
+      }
+    }
+
+    /* =====================================================
+       6. 開箱結果卡（隱藏款用 .gold 金色外框）
+       ===================================================== */
+    .res {
+      min-height: 300px;
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-top: 8px solid var(--c);
+      border-radius: 20px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 6px 6px 0 var(--shadow);
+      animation: pop .4s cubic-bezier(.3, 1.5, .5, 1);
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(.88);
+        opacity: 0;
+      }
+
+      to {
+        transform: none;
+        opacity: 1;
+      }
+    }
+
+    .res[hidden],
+    .box[hidden] {
+      display: none;
+    }
+
+    /* 隱藏款：金色外框 + 淡金背景 */
+    .res.gold {
+      border-color: var(--tape);
+      background: linear-gradient(160deg, var(--card), rgba(255, 210, 63, .2));
+      box-shadow: 0 0 0 3px var(--tape), 6px 6px 0 var(--shadow);
+    }
+
+    .gtag {
+      align-self: flex-start;
+      background: var(--tape);
+      color: #14123a;
+      font-weight: 900;
+      font-size: .8rem;
+      padding: 0 10px;
+      border-radius: 6px;
+      transform: skew(-7deg);
+    }
+
+    .emo {
+      font-size: 3rem;
+      line-height: 1;
+    }
+
+    .name {
+      font-weight: 900;
+      font-size: 1.4rem;
+      line-height: 1.3;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .meta span {
+      font-size: .82rem;
+      font-weight: 700;
+      background: var(--seg);
+      border-radius: 6px;
+      padding: 1px 10px;
+    }
+
+    .meta .v {
+      background: #2ecc71;
+      color: #08301a;
+    }
+
+    .desc {
+      color: var(--mute);
+      font-size: .92rem;
+      margin: 0;
+    }
+
+    /* 結果卡下方的按鈕列 */
+    .acts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .acts a,
+    .acts button {
+      font: inherit;
+      font-size: .88rem;
+      font-weight: 900;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 6px 14px;
+      cursor: pointer;
+      border: 2px solid var(--line);
+      background: var(--seg);
+      color: var(--ink);
+    }
+
+    .acts .main {
+      background: var(--accent);
+      color: var(--on-accent);
+      border-color: var(--accent);
+    }
+
+    .acts .no {
+      border-style: dashed;
+      color: var(--mute);
+    }
+
+    /* 沒有符合條件的店 */
+    .empty {
+      min-height: 300px;
+      border: 2px dashed var(--line);
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+      color: var(--mute);
+    }
+
+    /* 今日預估合計 */
+    .sum {
+      text-align: center;
+      margin: 18px 0 0;
+      font-weight: 700;
+      min-height: 1.6em;
+    }
+
+    /* =====================================================
+       7. 揪團區
+       ===================================================== */
+    .tools {
+      display: flex;
+      gap: 10px;
+      margin: 14px 0 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tools button {
+      font: inherit;
+      font-weight: 900;
+      border-radius: 999px;
+      padding: 10px 22px;
+      cursor: pointer;
+      border: 2px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: 4px 4px 0 var(--shadow);
+    }
+
+    .share {
+      margin-top: 20px;
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 6px 6px 0 var(--shadow);
+    }
+
+    .share[hidden] {
+      display: none;
+    }
+
+    .share h4 {
+      margin: 0 0 8px;
+    }
+
+    .share textarea {
+      width: 100%;
+      height: 150px;
+      font: inherit;
+      font-size: .9rem;
+      background: var(--seg);
+      color: var(--ink);
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      resize: vertical;
+    }
+
+    .share .acts a,
+    .share .acts button {
+      display: inline-block;
+    }
+
+    .tip {
+      font-size: .85rem;
+      color: var(--mute);
+      margin: 6px 0 0;
+    }
+
+    /* =====================================================
+       8. 抽過的紀錄
+       ===================================================== */
+    h4 {
+      font-size: 1rem;
+      margin: 34px 0 8px;
+      font-weight: 900;
+    }
+
+    .hist {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: .92rem;
+    }
+
+    .hist li {
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      padding: 1px 12px;
+    }
+
+    /* =====================================================
+       9. 手機版（寬度 640px 以下）
+       三個盒子仍排在同一列，所以整體縮小
+       ===================================================== */
+    @media (max-width: 640px) {
+      main {
+        padding: 20px 12px 48px;
+      }
+
+      .panel {
+        padding: 12px;
+      }
+
+      .grid {
+        gap: 8px;
+      }
+
+      .stage {
+        min-height: 0;
+      }
+
+      .box {
+        height: 200px;
+        gap: 10px;
+        box-shadow: 4px 4px 0 var(--shadow);
+      }
+
+      .box .q {
+        width: 52px;
+        height: 52px;
+        font-size: 2rem;
+        border-width: 3px;
+      }
+
+      .box .hint {
+        font-size: .75rem;
+        padding: 2px 8px;
+      }
+
+      .res {
+        min-height: 200px;
+        padding: 10px 8px;
+        gap: 4px;
+        border-top-width: 6px;
+        box-shadow: 4px 4px 0 var(--shadow);
+      }
+
+      .emo {
+        font-size: 2rem;
+      }
+
+      .name {
+        font-size: .95rem;
+      }
+
+      .meta span {
+        font-size: .7rem;
+        padding: 0 6px;
+      }
+
+      .desc {
+        font-size: .75rem;
+      }
+
+      .acts {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .acts a,
+      .acts button {
+        font-size: .75rem;
+        padding: 5px 6px;
+        text-align: center;
+      }
+
+      .slot h3 {
+        font-size: .9rem;
+      }
+
+      .empty {
+        min-height: 200px;
+        padding: 8px;
+        font-size: .8rem;
+      }
+
+      .share .acts {
+        flex-direction: row;
+      }
+
+      .share .acts a,
+      .share .acts button {
+        font-size: .85rem;
+        padding: 6px 12px;
+      }
+    }
+
+    /* 使用者系統設定「減少動態效果」時，關掉動畫 */
+    @media (prefers-reduced-motion: reduce) {
+
+      .box.shake,
+      .res {
+        animation: none;
+      }
+
+      .box {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+
+    <!-- ===== 頁首：Logo（生氣的飯碗＋交叉筷子）、標題、警示帶 ===== -->
+    <div class="top">
+      <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="中科大餓勢力 logo：生氣的飯碗與交叉筷子">
+        <!-- 橘紅圓形徽章 + 黃色外框 -->
+        <circle cx="50" cy="50" r="46" fill="#ff5a2a" stroke="#ffd23f" stroke-width="5" />
+        <!-- 交叉的兩支筷子 -->
+        <g stroke="#fff7e0" stroke-width="5" stroke-linecap="round">
+          <line x1="22" y1="18" x2="72" y2="62" />
+          <line x1="78" y1="18" x2="28" y2="62" />
+        </g>
+        <!-- 飯碗 -->
+        <path d="M18 54H82Q82 84 50 84Q18 84 18 54Z" fill="#fff7e0" stroke="#14123a" stroke-width="3.5"
+          stroke-linejoin="round" />
+        <!-- 生氣的眉毛、眼睛、嘴巴 -->
+        <path d="M30 59L45 66M70 59L55 66" stroke="#14123a" stroke-width="4" stroke-linecap="round" />
+        <circle cx="39" cy="71" r="3.2" fill="#14123a" />
+        <circle cx="61" cy="71" r="3.2" fill="#14123a" />
+        <path d="M43 78Q50 74 57 78" fill="none" stroke="#14123a" stroke-width="3" stroke-linecap="round" />
+      </svg>
+
+      <h1>中科大餓勢力</h1>
+
+      <!-- 深淺色切換 -->
+      <button class="theme" id="theme" aria-label="切換深淺色">🌓</button>
+    </div>
+
+    <div class="tape"><b></b></div>
+    <h2>全校餓人集合！</h2>
+    <p class="sub">早午餐・消夜・素食｜你的下一餐，由盲盒決定</p>
+
+    <!-- 功能：餓勢力稱號顯示位置（內容由 JS 的 updateTitle 產生） -->
+    <p class="badge" aria-live="polite"><span id="title"></span></p>
+
+    <!-- ===== 篩選面板：每一排的按鈕都由 JS 的 makeSegment 產生 ===== -->
+    <section class="panel" aria-label="篩選條件">
+      <div class="row"><span>時段</span>
+        <div class="seg" id="f-mode"></div>
+      </div>
+      <div class="row"><span>距離學校</span>
+        <div class="seg" id="f-d"></div>
+      </div>
+      <div class="row"><span>一餐預算</span>
+        <div class="seg" id="f-b"></div>
+        <span class="amt" id="amt"></span>
+      </div>
+      <div class="row"><span>飲食</span>
+        <div class="seg" id="f-v"></div>
+      </div>
+      <div class="row"><span>口味</span>
+        <div class="seg" id="f-t"></div>
+      </div>
+      <div class="row"><span>隱藏款</span>
+        <div class="seg" id="f-h"></div>
+      </div>
+
+      <!-- 功能：已排除的店家（有排除時才會顯示） -->
+      <div class="blk" id="blk" hidden></div>
+    </section>
+
+    <!-- 盲盒區：由 JS 的 buildGrid 產生 -->
+    <div class="grid" id="grid"></div>
+
+    <!-- 今日預估合計 -->
+    <p class="sum" id="sum"></p>
+
+    <!-- 功能：揪團 -->
+    <div class="tools">
+      <button id="group">📣 揪團問大家</button>
+    </div>
+
+    <section class="share" id="share" hidden>
+      <h4>揪團訊息</h4>
+      <textarea id="msg" readonly aria-label="揪團訊息"></textarea>
+      <div class="acts">
+        <button class="main" id="copy">複製文字</button>
+        <a id="line" target="_blank" rel="noopener">傳到 LINE</a>
+        <button id="sys" hidden>其他 App 分享</button>
+      </div>
+      <p class="tip" id="tip"></p>
+    </section>
+
+    <h4>今天抽過的</h4>
+    <ul class="hist" id="hist">
+      <li>還沒開箱</li>
+    </ul>
+  </main>
+
+  <script>
+    /* =====================================================
+       A. 店家資料
+       想新增店家，複製一筆貼進 SHOPS 就可以。
+
+       欄位說明：
+         icon   圖示
+         name   店名（同時當作唯一識別，請不要重複）
+         addr   地址或 Google 地圖搜尋關鍵字
+         km     從校區出發的約略步行公里數
+         price  一人一餐的約略預算（元）
+         meals  適合的時段：b 早餐、l 午餐、d 晚餐、n 消夜（可以連寫，例如 "ldn"）
+         veg    是否有素食選項（true / false）
+         tags   口味分類：飯、麵、炸物、鍋物、小吃
+         note   備註
+       ===================================================== */
+    const SHOPS = [
+      {
+        icon: "🥪", name: "馨香泡沫紅茶",
+        addr: "台中市北區太平路143-1號",
+        km: 0.5, price: 50, meals: "b", veg: true, tags: ["小吃"],
+        note: "傳統早餐店，蛋餅、吐司類可選蛋奶素",
+      },
+      {
+        icon: "🥖", name: "精武路無名燒餅店",
+        addr: "台中市北區精武路254號",
+        km: 1.2, price: 45, meals: "b", veg: false, tags: ["小吃"],
+        note: "燒餅油條，加蔥免費；清晨營業，週四休",
+      },
+      {
+        icon: "🥟", name: "王家菜頭粿糯米腸",
+        addr: "台中市中區三民路二段87號 第二市場",
+        km: 1.3, price: 60, meals: "b", veg: false, tags: ["小吃"],
+        note: "菜頭粿＋米腸＋蛋，早上限定",
+      },
+      {
+        icon: "🌯", name: "飲周公 eat bao lab 刈包",
+        addr: "台中市北區育才北路22號",
+        km: 0.4, price: 80, meals: "bl", veg: false, tags: ["小吃"],
+        note: "咖哩飯刈包",
+      },
+      {
+        icon: "🥐", name: "三佳早點",
+        addr: "台中市北區健行路436號",
+        km: 2.5, price: 50, meals: "b", veg: false, tags: ["小吃"],
+        note: "燒餅油條、牛肉蛋餅，要早起",
+      },
+      {
+        icon: "🏪", name: "錦中 7-11",
+        addr: "統一超商 錦中 台中市北區",
+        km: 0.3, price: 60, meals: "blnd", veg: true, tags: ["小吃"],
+        note: "最快、最不用想，超商通常營業到深夜",
+      },
+      {
+        icon: "🛒", name: "一心市場小吃",
+        addr: "一心市場 台中市北區三民路三段",
+        km: 0.3, price: 70, meals: "bl", veg: true, tags: ["飯", "麵"],
+        note: "傳統市場的小吃攤，攤位多可挑素的",
+      },
+      {
+        icon: "🍜", name: "二口美食鐵板麵",
+        addr: "台中市北區一中街83-2號",
+        km: 0.5, price: 85, meals: "ld", veg: true, tags: ["麵"],
+        note: "附湯和紅茶，吃粗飽首選；可點蛋麵",
+      },
+      {
+        icon: "🍝", name: "小蜜蜂炒麵",
+        addr: "小蜜蜂炒麵 台中市北區育才街",
+        km: 0.5, price: 60, meals: "ld", veg: false, tags: ["飯", "麵"],
+        note: "肉燥飯、炒麵，東坡肉飯約60元",
+      },
+      {
+        icon: "🍙", name: "忠武海苔飯捲便當",
+        addr: "忠武海苔飯捲便當 台中市北區育才街",
+        km: 0.5, price: 90, meals: "ld", veg: false, tags: ["飯", "麵"],
+        note: "韓式飯捲、炸醬麵",
+      },
+      {
+        icon: "🍛", name: "Mr.38 咖哩美食餐廳",
+        addr: "台中市北區一中街109號",
+        km: 0.5, price: 180, meals: "ld", veg: false, tags: ["飯"],
+        note: "咖哩飯附湯和飲料",
+      },
+      {
+        icon: "🍲", name: "偈亭泡菜鍋 雙十總店",
+        addr: "台中市北區雙十路一段117-2號",
+        km: 0.9, price: 260, meals: "d", veg: false, tags: ["鍋物"],
+        note: "起司牛奶鍋，適合揪朋友",
+      },
+      {
+        icon: "🍢", name: "上和園滷味",
+        addr: "台中市北區育才街4號",
+        km: 0.5, price: 100, meals: "ldn", veg: false, tags: ["小吃"],
+        note: "雞爪凍、豆乾；育才街攤販部分營業到較晚",
+      },
+      {
+        icon: "🍜", name: "王印乾麵",
+        addr: "台中市北區太平路65號之1",
+        km: 0.5, price: 60, meals: "ld", veg: false, tags: ["麵"],
+        note: "乾麵，週二公休",
+      },
+      {
+        icon: "🫓", name: "打餅舖烙餅",
+        addr: "台中市北區一中街83號",
+        km: 0.5, price: 65, meals: "ld", veg: true, tags: ["小吃"],
+        note: "手工烙餅，可選蛋奶素口味",
+      },
+      {
+        icon: "🍗", name: "天使雞排 一中店",
+        addr: "台中市北區一中街60號",
+        km: 0.5, price: 75, meals: "ldn", veg: false, tags: ["炸物"],
+        note: "厚切大雞排，消夜首選之一",
+      },
+      {
+        icon: "🍗", name: "胖子雞丁雞排",
+        addr: "台中市北區一中街20號",
+        km: 0.5, price: 70, meals: "ldn", veg: false, tags: ["炸物"],
+        note: "炸雞丁免啃骨",
+      },
+      {
+        icon: "🥞", name: "王子神穀日式厚鬆餅",
+        addr: "台中市北區一中街6號",
+        km: 0.5, price: 220, meals: "d", veg: true, tags: ["小吃"],
+        note: "現點現做，要等一下；甜點可算蛋奶素",
+      },
+      {
+        icon: "🍽️", name: "I PLAZA 愛廣場",
+        addr: "台中市北區一中街96號",
+        km: 0.5, price: 250, meals: "ld", veg: true, tags: ["飯", "麵", "鍋物"],
+        note: "多家餐廳和鍋物聚集，可挑有素食的店",
+      },
+      {
+        icon: "🍱", name: "中友百貨 地下美食街",
+        addr: "台中市北區三民路三段161號",
+        km: 0.5, price: 150, meals: "ld", veg: true, tags: ["飯", "麵"],
+        note: "冷氣最涼，選擇很多",
+      },
+    ];
+
+    /* =====================================================
+       B. 功能：隱藏款
+       開啟「隱藏款」時，每次開箱有小機率抽到這裡的項目。
+       addr 留空 "" 代表沒有地圖（例如彩蛋款），
+       結果卡就不會出現 Google 地圖按鈕。
+       ===================================================== */
+    const HIDDEN_CHANCE = 0.12; // 掉落機率 12%，想調高調低改這裡
+
+    const HIDDEN = [
+      {
+        icon: "🍧", name: "一中豐仁冰",
+        addr: "台中市北區育才街3巷4-6號",
+        km: 0.5, price: 60, veg: true, tags: ["點心"],
+        note: "開業近80年的古早味酸梅剉冰，學長姊的回憶",
+      },
+      {
+        icon: "🥛", name: "豐味綠豆沙牛乳",
+        addr: "台中市北區太平路63巷1號",
+        km: 0.5, price: 60, veg: true, tags: ["飲料"],
+        note: "綠豆沙綿密不帶沙感，飯後來一杯",
+      },
+      {
+        icon: "🎁", name: "朋友請客券",
+        addr: "",
+        km: 0, price: 0, veg: true, tags: ["彩蛋"],
+        note: "恭喜抽中！今天誰請客，由你的朋友決定（笑）",
+      },
+      {
+        icon: "🍜", name: "宿舍泡麵加蛋",
+        addr: "",
+        km: 0, price: 30, veg: false, tags: ["彩蛋"],
+        note: "省錢又暖胃，加顆蛋再丟把青菜就是豪華版",
+      },
+      {
+        icon: "🙈", name: "閉眼點菜日",
+        addr: "",
+        km: 0, price: 0, veg: true, tags: ["彩蛋"],
+        note: "打開 Google 地圖，閉眼點一下附近的店，點到哪間吃哪間",
+      },
+    ];
+    // 為了統一處理，幫隱藏款加上標記
+    HIDDEN.forEach(function (item) { item.hidden = true; });
+
+    /* =====================================================
+       C. 設定：時段、篩選選項
+       ===================================================== */
+    // 時段的名稱與盒子顏色
+    const MEALS = {
+      b: { label: "早餐", color: "#ffb020" },
+      l: { label: "午餐", color: "#ff5a2a" },
+      d: { label: "晚餐", color: "#9b7bff" },
+      n: { label: "消夜", color: "#20c7b0" },
+    };
+
+    // 每一排篩選的選項，格式：[值, 按鈕文字]
+    const OPTIONS = {
+      // 時段：早午晚餐（三個盒子）或消夜（一個盒子）
+      mode: [
+        ["day", "早午晚餐"],
+        ["late", "消夜"],
+      ],
+      // 距離（公里）
+      d: [
+        [0.5, "500 公尺內"],
+        [1, "1 公里內"],
+        [2, "2 公里內"],
+        [99, "不限"],
+      ],
+      // 功能：預算用形容詞表示，更像盲盒；實際金額顯示在旁邊的小字
+      b: [
+        [60, "月底吃土"],
+        [100, "平民美食"],
+        [150, "有錢人"],
+        [9999, "今天我最大"],
+      ],
+      // 飲食
+      v: [
+        [false, "葷素不拘"],
+        [true, "素食友善"],
+      ],
+      // 功能：口味篩選
+      t: [
+        [null, "不限"],
+        ["飯", "飯類"],
+        ["麵", "麵類"],
+        ["炸物", "炸物"],
+        ["鍋物", "鍋物"],
+        ["小吃", "小吃輕食"],
+      ],
+      // 隱藏款開關
+      h: [
+        [true, "開啟，小機率掉落"],
+        [false, "關閉"],
+      ],
+    };
+
+    // 預算按鈕旁邊的金額小字
+    const AMOUNT_TEXT = {
+      60: "約 60 元內",
+      100: "約 100 元內",
+      150: "約 150 元內",
+      9999: "不設上限",
+    };
+
+    // 目前的篩選狀態（預設值）
+    const filter = {
+      mode: "day",
+      d: 1,
+      b: 9999,
+      v: false,
+      t: null,
+      h: true,
+    };
+
+    /* =====================================================
+       D. 共用變數與小工具
+       ===================================================== */
+    const $ = function (id) { return document.getElementById(id); };
+    const grid = $("grid");
+
+    const slotState = {};  // 每個盒子目前抽到的店，例如 slotState.b.shop
+    const history = [];    // 今天抽過的紀錄
+    let slotKeys = [];     // 目前畫面上的盒子，["b","l","d"] 或 ["n"]
+
+    /* =====================================================
+       E. 功能：本機儲存
+       排除名單、稱號統計、隱藏款收藏都存在這支手機（瀏覽器）裡，
+       換裝置或清除瀏覽資料就會歸零。
+       ===================================================== */
+    let saved = {
+      blocked: [],  // 排除的店名
+      counts: {},   // 每家店被抽到幾次（用來算稱號）
+      nights: 0,    // 消夜開箱次數
+      hidden: [],   // 已收集的隱藏款
+    };
+
+    try {
+      saved = Object.assign(saved, JSON.parse(localStorage.getItem("ehg") || "{}"));
+    } catch (e) { /* 讀取失敗就用預設值 */ }
+
+    function save() {
+      try {
+        localStorage.setItem("ehg", JSON.stringify(saved));
+      } catch (e) { /* 儲存失敗就略過 */ }
+    }
+
+    /* =====================================================
+       F. 篩選面板
+       ===================================================== */
+
+    // 把某一排按鈕標示成「被選取」
+    function paint(box, activeButton) {
+      Array.from(box.children).forEach(function (btn) {
+        btn.setAttribute("aria-pressed", btn === activeButton);
+      });
+    }
+
+    // 預算旁邊更新金額小字
+    function updateAmount() {
+      $("amt").textContent ;
+    }
+
+    // 產生一排切換按鈕
+    // containerId：放按鈕的容器；name：對應 filter / OPTIONS 的欄位
+    function makeSegment(containerId, name) {
+      const box = $(containerId);
+
+      OPTIONS[name].forEach(function (option) {
+        const value = option[0];
+        const text = option[1];
+
+        const btn = document.createElement("button");
+        btn.textContent = text;
+        btn.setAttribute("aria-pressed", filter[name] === value);
+
+        btn.onclick = function () {
+          filter[name] = value;
+          paint(box, btn);
+
+          if (name === "b") updateAmount();
+          if (name === "mode") buildGrid(); // 切換時段要重畫盒子
+        };
+
+        box.appendChild(btn);
+      });
+    }
+
+    /* =====================================================
+       G. 抽籤邏輯
+       ===================================================== */
+
+    // 功能：篩選 —— 依目前條件取得可以抽的店家
+    // 條件：時段、距離、預算、素食、口味，並且排除「這家不要」的店
+    function getPool(slotKey) {
+      return SHOPS.filter(function (shop) {
+        return shop.meals.includes(slotKey)
+          && shop.km <= filter.d
+          && shop.price <= filter.b
+          && (!filter.v || shop.veg)
+          && (!filter.t || shop.tags.includes(filter.t))
+          && !saved.blocked.includes(shop.name);
+      });
+    }
+
+    // 功能：隱藏款 —— 取得可以掉落的隱藏款（遵守素食與排除設定）
+    function getHiddenPool(slotKey) {
+      return HIDDEN.filter(function (item) {
+        return (!filter.v || item.veg)
+          && !saved.blocked.includes(item.name)
+          && item !== slotState[slotKey].shop;
+      });
+    }
+
+    // 抽一家：先擲骰決定是否掉隱藏款，否則從一般名單隨機挑（不連續抽到同一家）
+    function pickShop(slotKey) {
+      const pool = getPool(slotKey);
+      if (!pool.length) return null; // 沒有符合條件的店
+
+      if (filter.h) {
+        const hiddenPool = getHiddenPool(slotKey);
+        if (hiddenPool.length && Math.random() < HIDDEN_CHANCE) {
+          return hiddenPool[Math.floor(Math.random() * hiddenPool.length)];
+        }
+      }
+
+      let shop;
+      do {
+        shop = pool[Math.floor(Math.random() * pool.length)];
+      } while (pool.length > 1 && shop === slotState[slotKey].shop);
+
+      return shop;
+    }
+
+    /* =====================================================
+       H. 功能：Google 地圖連結
+       ===================================================== */
+    function searchQuery(shop) {
+      return encodeURIComponent(shop.name + " " + shop.addr);
+    }
+
+    // 在 Google 地圖查看店家
+    function mapUrl(shop) {
+      return "https://www.google.com/maps/search/?api=1&query=" + searchQuery(shop);
+    }
+
+    // 從學校步行導航到店家
+    function directionsUrl(shop) {
+      return "https://www.google.com/maps/dir/?api=1"
+        + "&origin=" + encodeURIComponent("國立臺中科技大學三民校區")
+        + "&destination=" + searchQuery(shop)
+        + "&travelmode=walking";
+    }
+
+    /* =====================================================
+       I. 畫面：盲盒與結果卡
+       ===================================================== */
+
+    // 產生盲盒（早午晚餐三個，或消夜一個）
+    function buildGrid() {
+      grid.innerHTML = "";
+      slotKeys = filter.mode === "late" ? ["n"] : ["b", "l", "d"];
+      grid.className = "grid" + (slotKeys.length === 1 ? " one" : "");
+
+      slotKeys.forEach(function (key) {
+        const meal = MEALS[key];
+        const slot = document.createElement("div");
+        slot.className = "slot";
+        slot.id = "s-" + key;
+        slotState[key] = { shop: null };
+
+        slot.innerHTML = `
+          <h3 style="--c:${meal.color}">${meal.label}</h3>
+          <div class="stage" style="--c:${meal.color}">
+            <button class="box" aria-label="開啟${meal.label}盲盒">
+              <span class="q">?</span>
+              <span class="hint">點我開箱</span>
+            </button>
+            <div class="res" hidden aria-live="polite"></div>
+          </div>`;
+
+        grid.appendChild(slot);
+        slot.querySelector(".box").onclick = function () { drawBox(key); };
+      });
+
+      updateSum();
+    }
+
+    // 今日預估合計（開了兩個以上盒子才顯示）
+    function updateSum() {
+      const shops = slotKeys
+        .map(function (key) { return slotState[key] && slotState[key].shop; })
+        .filter(Boolean);
+
+      const total = shops.reduce(function (sum, shop) { return sum + shop.price; }, 0);
+      $("sum").textContent = shops.length > 1 ? "今天開箱預估合計約 $" + total : "";
+    }
+
+    // 組出結果卡的 HTML
+    function renderCard(shop) {
+      const hasMap = shop.addr !== "";
+      const distance = shop.km < 1
+        ? Math.round(shop.km * 1000) + " 公尺"
+        : shop.km + " 公里";
+
+      const goldTag = shop.hidden ? '<span class="gtag">✨ 隱藏款</span>' : "";
+      const distanceChip = hasMap ? `<span>約 ${distance}</span>` : "";
+      const vegChip = shop.veg ? '<span class="v">🌱 素食友善</span>' : "";
+      const mapButtons = hasMap
+        ? `<a class="main" target="_blank" rel="noopener" href="${mapUrl(shop)}">Google 地圖</a>
+           <a target="_blank" rel="noopener" href="${directionsUrl(shop)}">步行導航</a>`
+        : "";
+
+      return `
+        ${goldTag}
+        <div class="emo">${shop.icon}</div>
+        <div class="name">${shop.name}</div>
+        <div class="meta">
+          ${distanceChip}
+          <span>約 $${shop.price}</span>
+          <span>${shop.tags.join("／")}</span>
+          ${vegChip}
+        </div>
+        <p class="desc">${shop.note}</p>
+        <div class="acts">
+          ${mapButtons}
+          <button class="re">再抽一次</button>
+          <button class="no">這家不要</button>
+        </div>`;
+    }
+
+    // 開箱：搖晃 → 顯示結果卡
+    function drawBox(slotKey) {
+      const slot = $("s-" + slotKey);
+      const box = slot.querySelector(".box");
+      const card = slot.querySelector(".res");
+      const shop = pickShop(slotKey);
+
+      card.hidden = true;
+      box.hidden = false;
+
+      // 沒有符合條件的店：顯示提示
+      if (!shop) {
+        slotState[slotKey].shop = null;
+        box.hidden = true;
+        card.hidden = false;
+        card.className = "empty";
+        card.innerHTML = "這個條件內沒有符合的店，把距離、預算、口味或飲食條件放寬一點，或到上方恢復排除的店。";
+        updateSum();
+        return;
+      }
+
+      // 重新觸發搖晃動畫
+      box.classList.remove("shake");
+      void box.offsetWidth;
+      box.classList.add("shake");
+
+      setTimeout(function () { showResult(slotKey, shop, box, card); }, 560);
+    }
+
+    // 顯示結果卡，並記錄抽籤紀錄
+    function showResult(slotKey, shop, box, card) {
+      slotState[slotKey].shop = shop;
+
+      box.hidden = true;
+      card.hidden = false;
+      card.className = "res" + (shop.hidden ? " gold" : "");
+      card.innerHTML = renderCard(shop);
+
+      // 再抽一次
+      card.querySelector(".re").onclick = function () { drawBox(slotKey); };
+
+      // 功能：排除不想吃的店 —— 加入排除名單後立刻重抽
+      card.querySelector(".no").onclick = function () {
+        saved.blocked.push(shop.name);
+        save();
+        updateBlockedList();
+        drawBox(slotKey);
+      };
+
+      // 今天抽過的紀錄（最多 10 筆）
+      history.unshift(MEALS[slotKey].label + "：" + shop.name);
+      if (history.length > 10) history.pop();
+      $("hist").innerHTML = history.map(function (text) { return "<li>" + text + "</li>"; }).join("");
+
+      // 功能：稱號統計與隱藏款收藏
+      saved.counts[shop.name] = (saved.counts[shop.name] || 0) + 1;
+      if (slotKey === "n") saved.nights++;
+      if (shop.hidden && !saved.hidden.includes(shop.name)) saved.hidden.push(shop.name);
+      save();
+
+      updateTitle();
+      updateSum();
+    }
+
+    /* =====================================================
+       J. 功能：排除不想吃的店
+       顯示已排除的店家，並可以一鍵恢復。
+       ===================================================== */
+    function updateBlockedList() {
+      const count = saved.blocked.length;
+      const el = $("blk");
+      el.hidden = count === 0;
+
+      if (count) {
+        el.innerHTML = "已排除 " + count + " 家：" + saved.blocked.join("、")
+          + ' <button id="clr">全部恢復</button>';
+
+        $("clr").onclick = function () {
+          saved.blocked = [];
+          save();
+          updateBlockedList();
+        };
+      }
+    }
+
+    /* =====================================================
+       K. 功能：餓勢力稱號
+       依累計開箱次數升級，再依最常抽到的口味、
+       消夜次數、隱藏款收藏數加上額外稱號。
+       ===================================================== */
+    // 等級門檻：累計開箱幾次以上，就是這個稱號
+    const LEVELS = [
+      [0, "路人餓民"],
+      [5, "初階餓勢力"],
+      [15, "中堅餓勢力"],
+      [30, "餓勢力幹部"],
+      [60, "餓勢力老大"],
+    ];
+
+    // 最常抽到的口味對應的稱號
+    const TASTE_TITLES = {
+      "飯": "飯桶班長",
+      "麵": "麵條軍師",
+      "炸物": "炸物戰神",
+      "鍋物": "火鍋盟主",
+      "小吃": "小吃巡守",
+    };
+
+    function updateTitle() {
+      const counts = saved.counts;
+      const total = Object.values(counts).reduce(function (a, b) { return a + b; }, 0);
+
+      // 1) 依累計次數取得等級
+      let level = LEVELS[0][1];
+      LEVELS.forEach(function (item) {
+        if (total >= item[0]) level = item[1];
+      });
+
+      // 2) 統計每種口味被抽到幾次，取最多的
+      const tasteCounts = {};
+      Object.keys(counts).forEach(function (name) {
+        const shop = SHOPS.find(function (s) { return s.name === name; });
+        if (!shop) return; // 隱藏款不計入口味
+        shop.tags.forEach(function (tag) {
+          tasteCounts[tag] = (tasteCounts[tag] || 0) + counts[name];
+        });
+      });
+      const top = Object.entries(tasteCounts).sort(function (a, b) { return b[1] - a[1]; })[0];
+
+      // 3) 額外稱號
+      const extra = [];
+      if (top && top[1] >= 3) extra.push(TASTE_TITLES[top[0]]); // 同口味抽滿 3 次
+      if (saved.nights >= 5) extra.push("消夜夜貓");            // 消夜抽滿 5 次
+      if (saved.hidden.length >= 2) extra.push("隱藏款收藏家"); // 收集 2 款隱藏款
+
+      // 4) 組成顯示文字
+      $("title").textContent = "稱號：「" + [level].concat(extra).join("・") + "」"
+        + "｜累計開箱 " + total + " 次"
+        + (filter.h ? "｜隱藏款 " + saved.hidden.length + "/" + HIDDEN.length : "");
+    }
+
+    /* =====================================================
+       L. 功能：揪團
+       把已經開箱的店整理成一則訊息，附上地圖連結，
+       可以複製、傳到 LINE，或用手機的系統分享。
+       ===================================================== */
+    const NUMBER_EMOJI = ["1️⃣", "2️⃣", "3️⃣"];
+
+    $("group").onclick = function () {
+      const shareBox = $("share");
+      shareBox.hidden = false;
+
+      // 只整理已經開箱的盒子
+      const picked = slotKeys
+        .map(function (key) { return { key: key, shop: slotState[key].shop }; })
+        .filter(function (item) { return item.shop; });
+
+      // 還沒開箱：提示先開箱
+      if (!picked.length) {
+        $("msg").value = "";
+        $("tip").textContent = "先開箱，再按揪團，我會把抽到的店整理成一則訊息。";
+        $("line").removeAttribute("href");
+        return;
+      }
+
+      const onlyOne = picked.length === 1;
+
+      // 每一家店一段文字：時段、店名、預算、地圖連結（彩蛋款沒有地圖）
+      const lines = picked.map(function (item, i) {
+        const shop = item.shop;
+        const prefix = onlyOne ? "" : NUMBER_EMOJI[i] + " ";
+        const mapLine = shop.addr ? "\n" + mapUrl(shop) : "";
+        return prefix + MEALS[item.key].label + "：「" + shop.name + "」約 $" + shop.price + mapLine;
+      });
+
+      const text = "【中科大餓勢力 揪團】\n"
+        + (onlyOne ? "今天吃這家好不好？" : "今天吃哪個？回我 1、2、3 投票")
+        + "\n\n" + lines.join("\n\n");
+
+      $("msg").value = text;
+      $("tip").textContent = "複製後貼到班群或社團，也可以直接傳到 LINE。";
+      $("line").href = "https://line.me/R/msg/text/?" + encodeURIComponent(text);
+      $("sys").hidden = !navigator.share; // 手機才有系統分享
+
+      shareBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+
+    // 複製文字（先用新方法，不行再用舊方法）
+    $("copy").onclick = async function () {
+      const text = $("msg").value;
+      if (!text) return;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        $("tip").textContent = "已複製，貼到群組就能揪團。";
+      } catch (e) {
+        $("msg").select();
+        try {
+          document.execCommand("copy");
+          $("tip").textContent = "已複製，貼到群組就能揪團。";
+        } catch (e2) {
+          $("tip").textContent = "自動複製失敗，請長按文字框手動複製。";
+        }
+      }
+    };
+
+    // 系統分享（手機）
+    $("sys").onclick = function () {
+      try { navigator.share({ text: $("msg").value }); } catch (e) { /* 使用者取消分享 */ }
+    };
+
+    /* =====================================================
+       M. 深淺色切換
+       ===================================================== */
+    $("theme").onclick = function () {
+      const root = document.documentElement;
+      const isDark = root.dataset.theme
+        ? root.dataset.theme === "dark"
+        : !matchMedia("(prefers-color-scheme: light)").matches;
+
+      root.dataset.theme = isDark ? "light" : "dark";
+    };
+
+    /* =====================================================
+       N. 啟動
+       ===================================================== */
+    makeSegment("f-mode", "mode");
+    makeSegment("f-d", "d");
+    makeSegment("f-b", "b");
+    makeSegment("f-v", "v");
+    makeSegment("f-t", "t");
+    makeSegment("f-h", "h");
+
+    updateAmount();
+    buildGrid();
+    updateBlockedList();
+    updateTitle();
+  </script>
+</body>
+
+</html>
